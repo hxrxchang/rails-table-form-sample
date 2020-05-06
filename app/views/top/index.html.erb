@@ -1,16 +1,24 @@
-<table>
-  <thead>
-    <tr>
-      <th>品名</th>
-      <th>品名</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @materials.each do |material| %>
+<%= form_with url: orders_path do |form| %>
+  <table>
+    <thead>
       <tr>
-        <td><%= material.name %></td>
-        <td>hoge</td>
+        <th>品名</th>
+        <th>品名</th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <% @order_materials.each do |order_material| %>
+        <%= form.fields_for 'order_materials[]', order_material do |order_material_form| %>
+          <%= order_material_form.hidden_field :material_id, :value => order_material.material_id %>
+          <tr>
+            <td><%= order_material.material.name %></td>
+            <td>
+              <%= order_material_form.select :count, (1..10).to_a, {include_blank: '個数'} %>
+            </td>
+          </tr>
+        <% end %>
+      <% end %>
+    </tbody>
+  </table>
+  <%= submit_tag("請求書を作成する") %>
+<% end %>
